@@ -1,7 +1,11 @@
-(function(trap, bindings){
+(function(trap, Blitzcrank){
 
     var debug = false;
     var targetMap = {};
+    var bindings = Blitzcrank.bindings;
+    var overlayTemplate = '<div id="blitzcrank-overlay"><ul>{{combos}}</ul></div>';
+    var comboTemplate = '<li><span class="combo">{{combo}}</span><span class="name">{{name}}</span>';
+    var combosHtml = '';
 
     for( var i = 0, ii = bindings.length; i < ii; i++ ) {
         var combo = bindings[i].combo.toLowerCase();
@@ -11,13 +15,24 @@
                 target: bindings[i].target,
                 selector: bindings[i].selector,
                 type: bindings[i].type,
-                name: bindings[i].name
+                name: bindings[i].name,
+                combo: combo,
+                help: function(){
+                    var keys = this.combo.split(' ');
+                    var comboHtml = '';
+                    for( var key in keys ) {
+                        comboHtml += '<a class="key" href="#"><span>' + keys[key].toUpperCase() + '</span></a>';
+                    }
+
+                    return comboTemplate.replace('{{combo}}', comboHtml).replace('{{name}}', this.name);
+                }
             };
 
             trap.bind(combo, function(e, combo){
                 if( targetMap[combo].selector ) {
-                    var menuItem = document.getElementById(targetMap[combo].selector);
-                    menuItem.setAttribute('class', menuItem.getAttribute('class') + ' current');
+
+                    var menuItem = (targetMap[combo].type == 'menu-top' ) ? document.getElementById(targetMap[combo].selector) : '';
+                    menuItem.setAttribute('class', menuItem.getAttribute('class') + ' blitzcrank-target');
                 }
 
                 window.location.href = targetMap[combo].target;
@@ -28,23 +43,29 @@
         }
     }
 
-    var showHelp = function() {
-        // TODO: generate help page (?) which shows all keycombos css = http://cssdeck.com/labs/apple-keyboard-via-css3
-        // Also add a shortcut to this page in the adminbar
-        alert('show help');
-    };
-
-    var helpCombos = ['b ?'];
-    
-    // check if combo "b l" is available
-    if( typeof targetMap['b l'] == 'undefined' ) {
-        helpCombos.push('b l');
+    for(var combo in targetMap) {
+        combosHtml += targetMap[combo].help();
     }
 
-    trap.bind(helpCombos, showHelp);
+    document.getElementsByTagName('body')[0].insertAdjacentHTML('beforeend', overlayTemplate.replace('{{combos}}', combosHtml));
+    var helpOverlay = document.getElementById('blitzcrank-overlay');
+    var openRegex = new RegExp('(open)');
+
+    trap.bind(['?', '?'], function() {
+        if( openRegex.test(helpOverlay.getAttribute('class')) ) {
+            helpOverlay.setAttribute('class', 'a');
+        }
+        else {
+            helpOverlay.setAttribute('class', 'open');
+        }
+    });
+
+    trap.bind('b l i t z c r a n k', function(){
+        // TODO
+    });
 
     if( debug ) {
-        console.log(bindings);
+        console.log(Blitzcrank);
         console.log(targetMap);
     }
 
