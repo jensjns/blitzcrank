@@ -2,8 +2,8 @@
 /*
     Plugin Name: Blitzcrank
     Plugin URI: http://wordpress.org/plugins/blitzcrank/
-    Description: Jump around wp-admin in a blitz! Show the help-section by pressing <code>b</code> then <code>?</code>
-    Version: 0.1
+    Description: Jump around wp-admin in a blitz! Show the help-section by hitting <code>?</code>
+    Version: 1.0.0
     Author: Jens Nilsson
     Author URI: http://jensnilsson.nu
 */

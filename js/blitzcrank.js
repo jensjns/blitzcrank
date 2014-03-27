@@ -32,7 +32,7 @@
                 if( targetMap[combo].selector ) {
 
                     var menuItem = (targetMap[combo].type == 'menu-top' ) ? document.getElementById(targetMap[combo].selector) : '';
-                    menuItem.setAttribute('class', menuItem.getAttribute('class') + ' blitzcrank-target');
+                    menuItem.setAttribute('class', menuItem.getAttribute('class') + ' current');
                 }
 
                 window.location.href = targetMap[combo].target;
@@ -51,7 +51,7 @@
     var helpOverlay = document.getElementById('blitzcrank-overlay');
     var openRegex = new RegExp('(open)');
 
-    trap.bind(['?', '?'], function() {
+    trap.bind(['?'], function() {
         if( openRegex.test(helpOverlay.getAttribute('class')) ) {
             helpOverlay.setAttribute('class', 'a');
         }
