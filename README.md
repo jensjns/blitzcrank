@@ -12,6 +12,7 @@ If you are using WordPress' admin-section in english keyboard-shortcuts some of 
 `m e` Media  
 `p a` Pages  
 `c o` Comments  
+`?` Help Section  
 And so on.. It uses the first two letters of the label to create the keyboard shortcut. Which means the shortcuts will make sense regardless of language.
 
 Installation

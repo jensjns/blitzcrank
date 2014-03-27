@@ -7,18 +7,17 @@ Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Jump around wp-admin in a blitz! Show the help-section by hitting `?`
+Jump around wp-admin in a blitz!
 
 == Description ==
 
-Jump around wp-admin in a blitz! Show the help-section by hitting `?`
-
 If you are using WordPress' admin-section in english keyboard-shortcuts some of the the top-level pages will be:  
-`d a` Dashboard
-`p o` Posts
-`m e` Media
-`p a` Pages
-`c o` Comments
+<code>d a</code> Dashboard  
+<code>p o</code> Posts  
+<code>m e</code> Media  
+<code>p a</code> Pages  
+<code>c o</code> Comments  
+<code>?</code> Help section  
 And so on.. It uses the first two letters of the label to create the keyboard shortcut. Which means the shortcuts will make sense regardless of language.
 
 == Installation ==
