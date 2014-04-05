@@ -1,72 +1,93 @@
 (function(trap, Blitzcrank){
 
     var debug = false;
-    var targetMap = {};
-    var bindings = Blitzcrank.bindings;
-    var overlayTemplate = '<div id="blitzcrank-overlay"><ul>{{combos}}</ul></div>';
+    var comboMap = {};
+    var overlayTemplate = '<div id="blitzcrank-overlay">{{combos}}</div>';
     var comboTemplate = '<li><span class="combo">{{combo}}</span><span class="name">{{name}}</span>';
-    var combosHtml = '';
+    var overlayHtml = '';
+    var helpOverlay = false;
+    var openRegex = new RegExp('(open)');
+    var adminMenu = document.querySelector('#adminmenu');
+    var listItems = adminMenu.querySelectorAll('li.menu-top');
+    var currentRegExp = new RegExp('(wp-has-current-submenu)');
 
-    for( var i = 0, ii = bindings.length; i < ii; i++ ) {
-        var combo = bindings[i].combo.toLowerCase();
+    // create a bound item
+    var createItem = function(item) {
+        var topMenuItem = item.querySelector('.wp-menu-name');
+        var name = null;
 
-        if( typeof targetMap[combo] == 'undefined' ) {
-            targetMap[combo] = {
-                target: bindings[i].target,
-                selector: bindings[i].selector,
-                type: bindings[i].type,
-                name: bindings[i].name,
+        if( topMenuItem ) {
+            name = topMenuItem.innerText || topMenuItem.textContent;
+        }
+        else {
+            name = item.querySelector('a').innerText || item.querySelector('a').textContent;
+        }
+
+        var combo = (name.substr(0, 1) + ' ' + name.substr(1, 1)).toLowerCase();
+
+        if( typeof comboMap[combo] == 'undefined' ) {
+            comboMap[combo] = {
+                listItem: item,
+                name: name,
                 combo: combo,
+                anchor: item.querySelector('a'),
                 help: function(){
-                    var keys = this.combo.split(' ');
+                    var keys = combo.split(' ');
                     var comboHtml = '';
+
                     for( var key in keys ) {
                         comboHtml += '<a class="key" href="#"><span>' + keys[key].toUpperCase() + '</span></a>';
                     }
 
-                    return comboTemplate.replace('{{combo}}', comboHtml).replace('{{name}}', this.name);
+                    return comboTemplate.replace('{{combo}}', comboHtml).replace('{{name}}', name);
                 }
             };
 
-            trap.bind(combo, function(e, combo){
-                if( targetMap[combo].selector ) {
-
-                    var menuItem = (targetMap[combo].type == 'menu-top' ) ? document.getElementById(targetMap[combo].selector) : '';
-                    menuItem.setAttribute('class', menuItem.getAttribute('class') + ' current');
-                }
-
-                window.location.href = targetMap[combo].target;
+            trap.bind(combo, function(e, combo) {
+                comboMap[combo].listItem.setAttribute('class', comboMap[combo].listItem.getAttribute('class') + ' current blitzcrank-clicked');
+                comboMap[combo].anchor.click();
             });
         }
         else if( debug ) {
-            console.log('Shortcut collision for', combo);
+            console.log('Combo collision for', combo);
+        }
+    };
+
+    for( var i = 0, ii = listItems.length; i < ii; i++ ) {
+        createItem(listItems[i]);
+
+        if( currentRegExp.test(listItems[i].getAttribute('class'))) {
+            var submenuItems = listItems[i].querySelectorAll('.wp-submenu li');
+            for(var j = 1, jj = submenuItems.length; j < jj; j++) {
+                createItem(submenuItems[j]);
+            }
         }
     }
 
-    for(var combo in targetMap) {
-        combosHtml += targetMap[combo].help();
-    }
-
-    document.getElementsByTagName('body')[0].insertAdjacentHTML('beforeend', overlayTemplate.replace('{{combos}}', combosHtml));
-    var helpOverlay = document.getElementById('blitzcrank-overlay');
-    var openRegex = new RegExp('(open)');
-
+    // Bind help
     trap.bind(['?'], function() {
+        if( !helpOverlay ) {
+            for(var combo in comboMap) {
+                overlayHtml += comboMap[combo].help();
+            }
+            document.getElementsByTagName('body')[0].insertAdjacentHTML('beforeend', overlayTemplate.replace('{{combos}}', '<ul>' + overlayHtml + '</ul>'));
+            helpOverlay = document.getElementById('blitzcrank-overlay');
+        }
+
         if( openRegex.test(helpOverlay.getAttribute('class')) ) {
-            helpOverlay.setAttribute('class', 'a');
+            helpOverlay.setAttribute('class', ' ');
+            trap.unbind('esc');
         }
         else {
             helpOverlay.setAttribute('class', 'open');
+            trap.bind(['esc'], function() {
+                trap.trigger('?');
+            });
         }
     });
 
     trap.bind('b l i t z c r a n k', function(){
         // TODO
     });
-
-    if( debug ) {
-        console.log(Blitzcrank);
-        console.log(targetMap);
-    }
 
 })(Mousetrap, Blitzcrank);
