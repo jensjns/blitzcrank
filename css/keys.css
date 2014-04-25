@@ -1,8 +1,8 @@
 /* Thanks to Dustin Cartwright for providing the keyboard-css found here: http://cssdeck.com/labs/apple-keyboard-via-css3 */
-#blitzcrank-overlay .key{
+.blitzcrank-overlay .key{
     display: block;
     color: #7b7b7b;
-    font: bold 9pt arial;
+    font: bold 12px arial;
     text-decoration: none;
     text-align: center;
     width: 44px;
@@ -28,15 +28,16 @@
         0 2px 3px #333;
     text-shadow: 0px 1px 0px #f5f5f5; }
 
-#blitzcrank-overlay .key span{
+.blitzcrank-overlay .key span{
     display: block;
     margin: 14px 0 0;
     text-transform: uppercase; }
 
-#blitzcrank-overlay .key:active, #blitzcrank-overlay .keydown {
+.blitzcrank-overlay .key:active, #blitzcrank-overlay .keydown {
     color: #888;
     background: #ebeced;
     margin: 7px 5px 3px;
+    outline: none;
     -webkit-box-shadow:
         inset 0 0 25px #ddd,
         0 0 3px #333;

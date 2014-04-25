@@ -2,7 +2,7 @@
 Contributors: jensnilsson
 Tags: wp-admin, admin, shortcut, keyboard shortcut
 Requires at least: 3.0.1
-Tested up to: 3.8.1
+Tested up to: 3.9
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -39,7 +39,7 @@ By hitting `?`
 == Changelog ==
 
 = 1.1.0 =
-* Now using doT template-engine, to display the help-section and the upcoming task-switcher
+* Now using doT template-engine, to display the help-section and the task-switcher
 * Admin-screens displaying a list is now supported
 
 = 1.0.0 =
@@ -52,6 +52,7 @@ By hitting `?`
 
 = 1.1.0 =
 * Support for admin-screens displaying a list (Posts, Pages, Media, Plugins, Users) is now supported, you can navigate up/down mark items and access their primary command.
+* Task switcher
 
 = 1.0.0 =
 * Initial release

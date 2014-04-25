@@ -1,27 +1,41 @@
 @import 'keys.css'
 
-#blitzcrank-overlay
+.blitzcrank-overlay
+    -webkit-font-smoothing antialiased
     display none
     border-radius 20px
     padding 3%
-    left 12%
     width 70%
-    top 5%
+    left 50%
+    margin-left -35%
+    top 50%
     z-index 999
     position fixed
     font-weight bold
     background url('bg.png')
     overflow hidden
+    box-sizing border-box
     &.open
         display block
     .key
         margin-right 15px
+        &.plus
+            &::after
+                content '+'
+                color white
+                display block
+                width 15px
+                position relative
+                left 100%
+                height 41px
+                bottom 17px
+                float left
+                font-weight normal
+                font-size 15px
     ul
         margin 0
         li
-            width 50%
             display inline-block
-            margin-bottom 20px
         .combo
             display inline-block
             a
@@ -31,13 +45,52 @@
             vertical-align middle
             color white
             font-family 'Open Sans', sans-serif
-            font-size 23px
-            font-weight 400
-            line-height 29px
+            font-weight bold
         span
             span
                 span
                     display none
+.blitzcrank-overlay
+    &#blitzcrank-help
+        ul
+            li
+                width 50%
+                margin-bottom 20px
+            .name
+                font-size 23px
+                line-height 29px
+    &#blitzcrank-task-switcher
+        padding 1%
+        ul
+            li
+                margin 1%
+                width 8.75%
+                height 100px
+                text-align center
+                color white
+                opacity .4
+                float left
+                transition all .2s ease
+                &.blitzcrank-task-switcher-current
+                    opacity 1
+                    transition all .2s ease
+                    div
+                        &.wp-menu-image
+                            &::before
+                                margin-top -10px
+                div
+                    &.wp-menu-image
+                        &::before
+                            color white
+                            font-size 60px
+                            width auto
+                            height 60px
+                            text-shadow 1px 1px 0px black
+                .name
+                    vertical-align bottom
+                    font-weight bold
+                    font-size 14px
+                    text-shadow 1px 1px 0px black
 .blitzcrank-target
     &:before
         content ''
@@ -73,7 +126,7 @@
             left 3px
             border-radius 0 0 10px 0
 @media all and (max-width: 900px)
-    #blitzcrank-overlay
+    .blitzcrank-overlay
         ul
             li
                 width 100%
