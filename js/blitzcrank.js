@@ -1,15 +1,16 @@
-(function(trap, Blitzcrank){
-
+(function(mousetrap, Blitzcrank, doT){
     var debug = false;
-    var comboMap = {};
-    var overlayTemplate = '<div id="blitzcrank-overlay">{{combos}}</div>';
-    var comboTemplate = '<li><span class="combo">{{combo}}</span><span class="name">{{name}}</span>';
-    var overlayHtml = '';
+
+    var comboMap = {
+        combos: []
+    };
+
     var helpOverlay = false;
     var openRegex = new RegExp('(open)');
     var adminMenu = document.querySelector('#adminmenu');
     var listItems = adminMenu.querySelectorAll('li.menu-top');
     var currentRegExp = new RegExp('(wp-has-current-submenu)');
+    var theList = document.querySelector("#the-list");
 
     // create a bound item
     var createItem = function(item) {
@@ -31,19 +32,12 @@
                 name: name,
                 combo: combo,
                 anchor: item.querySelector('a'),
-                help: function(){
-                    var keys = combo.split(' ');
-                    var comboHtml = '';
-
-                    for( var key in keys ) {
-                        comboHtml += '<a class="key" href="#"><span>' + keys[key].toUpperCase() + '</span></a>';
-                    }
-
-                    return comboTemplate.replace('{{combo}}', comboHtml).replace('{{name}}', name);
-                }
+                keys: combo.toUpperCase().split(' ')
             };
 
-            trap.bind(combo, function(e, combo) {
+            comboMap.combos.push(comboMap[combo]);
+
+            mousetrap.bind(combo, function(e, combo) {
                 comboMap[combo].listItem.setAttribute('class', comboMap[combo].listItem.getAttribute('class') + ' current blitzcrank-clicked');
                 comboMap[combo].anchor.click();
             });
@@ -64,30 +58,93 @@
         }
     }
 
+    var helpTemplate = doT.template(''
+    +'<div id="blitzcrank-overlay">'
+    +    '<ul>'
+    +        '{{~it.combos :combo }}'
+    +            '<li>'
+    +                '<span class="combo">'
+    +                    '{{~combo.keys :key }}'
+    +                        '<a class="key" href="#"><span>{{=key}}</span></a>'
+    +                    '{{~}}'
+    +                '</span>'
+    +                '<span class="name">{{=combo.name}}</span>'
+    +            '</li>'
+    +        '{{~}}'
+    +    '</ul>'
+    +'</div>');
+
     // Bind help
-    trap.bind(['?'], function() {
+    mousetrap.bind(['?'], function() {
         if( !helpOverlay ) {
-            for(var combo in comboMap) {
-                overlayHtml += comboMap[combo].help();
-            }
-            document.getElementsByTagName('body')[0].insertAdjacentHTML('beforeend', overlayTemplate.replace('{{combos}}', '<ul>' + overlayHtml + '</ul>'));
+            document.getElementsByTagName('body')[0].insertAdjacentHTML('beforeend', helpTemplate(comboMap));
             helpOverlay = document.getElementById('blitzcrank-overlay');
         }
 
         if( openRegex.test(helpOverlay.getAttribute('class')) ) {
             helpOverlay.setAttribute('class', ' ');
-            trap.unbind('esc');
+            mousetrap.unbind('esc');
         }
         else {
             helpOverlay.setAttribute('class', 'open');
-            trap.bind(['esc'], function() {
-                trap.trigger('?');
+            mousetrap.bind(['esc'], function() {
+                mousetrap.trigger('?');
             });
         }
     });
 
-    trap.bind('b l i t z c r a n k', function(){
+    mousetrap.bind('b l i t z c r a n k', function(){
         // TODO
     });
 
-})(Mousetrap, Blitzcrank);
+
+    var isWhitespace = function(node) {
+        return node.nodeType == 3 && /^\s*$/.test(node.data);
+    };
+
+    var getNextElementSibling = function(node) {
+
+        while (node && (node = node.nextSibling)) {
+            if (node.nodeType == 1) {
+                return node;
+            }
+        }
+        // return undefined
+    }
+
+    var getPreviousElementSibling = function(node) {
+
+        while (node && (node = node.previousSibling)) {
+            if (node.nodeType == 1) {
+                return node;
+            }
+        }
+        // return undefined
+    }
+
+    if( theList ) {
+
+        var current = theList.querySelector('tr');
+        current.classList.add('blitzcrank-thelist-current');
+
+        mousetrap.bind(['up', 'down'], function(e){
+            e.preventDefault();
+            var next = ( e.keyIdentifier == 'Down' ) ? getNextElementSibling(current) : getPreviousElementSibling(current);
+
+            if( next ) {
+                next.classList.add('blitzcrank-thelist-current');
+                current.classList.remove('blitzcrank-thelist-current');
+                current = next;
+            }
+        });
+
+        mousetrap.bind('x', function(){
+            current.querySelector('input[type=checkbox]').click();
+        });
+
+        mousetrap.bind('enter', function(){
+            current.querySelector('.row-actions').firstChild.querySelector('a').click();
+        });
+    }
+ 
+})(Mousetrap, Blitzcrank, doT);

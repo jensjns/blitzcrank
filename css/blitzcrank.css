@@ -71,6 +71,17 @@
 .folded .blitzcrank-target:before {
   left: 42px;
 }
+.blitzcrank-thelist-current::after {
+  background: #2ea2cc;
+}
+#the-list tr::after {
+  content: '';
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  left: 3px;
+  border-radius: 0 0 10px 0;
+}
 @media all and (max-width: 900px) {
   #blitzcrank-overlay ul li {
     width: 100%;

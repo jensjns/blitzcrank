@@ -38,6 +38,10 @@ By hitting `?`
 
 == Changelog ==
 
+= 1.1.0 =
+* Now using doT template-engine, to display the help-section and the upcoming task-switcher
+* Admin-screens displaying a list is now supported
+
 = 1.0.0 =
 * Keyboard shortcuts to open submenus working
 * Keyboard shortcuts to top-level pages working
@@ -45,6 +49,9 @@ By hitting `?`
 * Initial release
 
 == Upgrade Notice ==
+
+= 1.1.0 =
+* Support for admin-screens displaying a list (Posts, Pages, Media, Plugins, Users) is now supported, you can navigate up/down mark items and access their primary command.
 
 = 1.0.0 =
 * Initial release
